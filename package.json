@@ -8,7 +8,8 @@
     "start": "strapi start",
     "build": "strapi build",
     "strapi": "strapi",
-    "deploy": "strapi deploy"
+    "deploy": "strapi deploy",
+    "heroku-postbuild": "ng build --prod"
   },
   "dependencies": {
     "@strapi/plugin-cloud": "4.25.11",
@@ -16,6 +17,7 @@
     "@strapi/plugin-users-permissions": "4.25.11",
     "@strapi/strapi": "4.25.11",
     "better-sqlite3": "8.6.0",
+    "heroku": "^9.2.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "5.3.4",
@@ -29,8 +31,8 @@
     "uuid": "b1574001-540d-40ee-af82-8004b2dd88f5"
   },
   "engines": {
-    "node": ">=18.0.0 <=20.x.x",
-    "npm": ">=6.0.0"
+    "node": "20.x",
+    "npm": "10.x"
   },
   "license": "MIT"
 }
