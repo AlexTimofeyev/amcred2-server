@@ -29,17 +29,35 @@
       "relation": "oneToOne",
       "target": "admin::user"
     },
-    "status": {
-      "type": "enumeration",
-      "enum": [
-        "DRAFT",
-        "ACTIVE"
-      ],
+    "title": {
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
-      }
+      },
+      "type": "string"
+    },
+    "seo_title": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "string"
+    },
+    "seo_description": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "string"
+    },
+    "cities": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::city.city",
+      "mappedBy": "post"
     }
   }
 }
