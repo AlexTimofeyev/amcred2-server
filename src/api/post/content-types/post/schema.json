@@ -1,0 +1,50 @@
+{
+  "kind": "collectionType",
+  "collectionName": "posts",
+  "info": {
+    "singularName": "post",
+    "pluralName": "posts",
+    "displayName": "Post",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "title_ru": {
+      "type": "string"
+    },
+    "locations": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::location.location",
+      "inversedBy": "posts"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title"
+    },
+    "body": {
+      "type": "text"
+    },
+    "post_status": {
+      "type": "enumeration",
+      "enum": [
+        "published",
+        "pending",
+        "blocked"
+      ],
+      "default": "pending"
+    },
+    "category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::category.category",
+      "inversedBy": "posts"
+    }
+  }
+}
