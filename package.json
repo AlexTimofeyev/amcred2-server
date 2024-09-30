@@ -30,8 +30,8 @@
     "typescript": "^5"
   },
   "engines": {
-    "node": ">=20.x",
-    "npm": "10.x"
+    "node": "v20.9.0",
+    "npm": "10.1.0"
   },
   "strapi": {
     "uuid": "414ca7ed-2e1c-467a-914d-6c80e8b02bbf"
