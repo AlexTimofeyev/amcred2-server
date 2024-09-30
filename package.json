@@ -1,5 +1,5 @@
 {
-  "name": "my-strapi-project",
+  "name": "amcred2",
   "version": "0.1.0",
   "private": true,
   "description": "A Strapi application",
@@ -30,8 +30,8 @@
     "typescript": "^5"
   },
   "engines": {
-    "node": ">=18.0.0 <=20.x.x",
-    "npm": ">=6.0.0"
+    "node": ">=20.x",
+    "npm": "10.x"
   },
   "strapi": {
     "uuid": "414ca7ed-2e1c-467a-914d-6c80e8b02bbf"
