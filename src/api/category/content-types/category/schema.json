@@ -27,12 +27,6 @@
       "type": "string",
       "required": false,
       "maxLength": 255
-    },
-    "posts": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::post.post",
-      "mappedBy": "category"
     }
   }
 }

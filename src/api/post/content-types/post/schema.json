@@ -40,11 +40,16 @@
       ],
       "default": "pending"
     },
-    "category": {
+    "users_permissions_user": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::category.category",
-      "inversedBy": "posts"
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "Condition": {
+      "type": "dynamiczone",
+      "components": [
+        "shared.credit-info"
+      ]
     }
   }
 }

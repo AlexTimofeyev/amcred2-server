@@ -62,6 +62,21 @@ export interface SharedMedia extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedCreditInfo extends Struct.ComponentSchema {
+  collectionName: 'components_shared_credit_infos';
+  info: {
+    displayName: 'Credit info';
+    description: '';
+  };
+  attributes: {
+    min: Schema.Attribute.Integer;
+    max: Schema.Attribute.Integer;
+    max_month: Schema.Attribute.Integer;
+    currency: Schema.Attribute.Enumeration<['usd', 'uah', 'eur']>;
+    min_month: Schema.Attribute.Integer;
+  };
+}
+
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
@@ -70,6 +85,7 @@ declare module '@strapi/strapi' {
       'shared.rich-text': SharedRichText;
       'shared.quote': SharedQuote;
       'shared.media': SharedMedia;
+      'shared.credit-info': SharedCreditInfo;
     }
   }
 }

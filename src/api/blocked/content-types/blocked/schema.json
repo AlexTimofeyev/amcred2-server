@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "blockeds",
+  "info": {
+    "singularName": "blocked",
+    "pluralName": "blockeds",
+    "displayName": "blocked",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "ip": {
+      "type": "string",
+      "maxLength": 16,
+      "unique": true
+    },
+    "email": {
+      "type": "email"
+    }
+  }
+}

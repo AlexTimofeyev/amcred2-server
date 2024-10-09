@@ -1,0 +1,30 @@
+{
+  "collectionName": "components_shared_credit_infos",
+  "info": {
+    "displayName": "Credit info",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "min": {
+      "type": "integer"
+    },
+    "max": {
+      "type": "integer"
+    },
+    "max_month": {
+      "type": "integer"
+    },
+    "currency": {
+      "type": "enumeration",
+      "enum": [
+        "usd",
+        "uah",
+        "eur"
+      ]
+    },
+    "min_month": {
+      "type": "integer"
+    }
+  }
+}
