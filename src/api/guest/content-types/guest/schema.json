@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "guests",
+  "info": {
+    "singularName": "guest",
+    "pluralName": "guests",
+    "displayName": "Guest"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "ip": {
+      "type": "string",
+      "maxLength": 16
+    },
+    "is_banned": {
+      "type": "boolean"
+    },
+    "phone": {
+      "type": "string"
+    }
+  }
+}
