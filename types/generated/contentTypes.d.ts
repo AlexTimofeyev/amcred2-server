@@ -473,7 +473,6 @@ export interface PluginUsersPermissionsUser
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 15;
       }>;
-    articles: Schema.Attribute.Relation<'oneToMany', 'api::article.article'>;
     ip: Schema.Attribute.String &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 39;
@@ -504,11 +503,26 @@ export interface ApiAboutAbout extends Struct.SingleTypeSchema {
   options: {
     draftAndPublish: false;
   };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
   attributes: {
-    title: Schema.Attribute.String;
+    title: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     blocks: Schema.Attribute.DynamicZone<
       ['shared.media', 'shared.quote', 'shared.rich-text', 'shared.slider']
-    >;
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -553,7 +567,6 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 80;
       }>;
-    slug: Schema.Attribute.UID<'title'>;
     cover: Schema.Attribute.Media<'images' | 'files' | 'videos'> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -570,6 +583,11 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
       }>;
     tags: Schema.Attribute.Relation<'manyToMany', 'api::tag.tag'>;
     category: Schema.Attribute.Relation<'oneToOne', 'api::category.category'>;
+    slug: Schema.Attribute.Relation<'oneToOne', 'api::slug.slug'>;
+    users_permissions_user: Schema.Attribute.Relation<
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -590,7 +608,7 @@ export interface ApiBlockedBlocked extends Struct.CollectionTypeSchema {
   info: {
     singularName: 'blocked';
     pluralName: 'blockeds';
-    displayName: 'blocked';
+    displayName: 'Blocked';
     description: '';
   };
   options: {
@@ -661,10 +679,6 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
       }>;
     slug: Schema.Attribute.UID<'name'>;
     description: Schema.Attribute.Text;
-    name_ru: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 255;
-      }>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -680,49 +694,34 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiGiveMonyGiveMony extends Struct.SingleTypeSchema {
-  collectionName: 'give_monies';
+export interface ApiCustomerCustomer extends Struct.CollectionTypeSchema {
+  collectionName: 'customers';
   info: {
-    singularName: 'give-mony';
-    pluralName: 'give-monies';
-    displayName: 'Give Mony';
+    singularName: 'customer';
+    pluralName: 'customers';
+    displayName: 'Customer';
     description: '';
   };
   options: {
-    draftAndPublish: true;
-  };
-  pluginOptions: {
-    i18n: {
-      localized: true;
-    };
+    draftAndPublish: false;
   };
   attributes: {
-    title: Schema.Attribute.String &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    slug: Schema.Attribute.UID<'title'> &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    other: Schema.Attribute.DynamicZone<
-      [
-        'shared.slider',
-        'shared.seo',
-        'shared.rich-text',
-        'shared.quote',
-        'shared.media',
-      ]
-    > &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
+    firstName: Schema.Attribute.String;
+    lastName: Schema.Attribute.String;
+    email: Schema.Attribute.Email &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    isBlocked: Schema.Attribute.Boolean;
+    avatar: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+    confirmedAt: Schema.Attribute.DateTime;
+    verificationToken: Schema.Attribute.String;
+    resetPasswordToken: Schema.Attribute.String;
+    ip: Schema.Attribute.String;
+    password: Schema.Attribute.String & Schema.Attribute.Required;
+    phone: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -733,7 +732,44 @@ export interface ApiGiveMonyGiveMony extends Struct.SingleTypeSchema {
     locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
-      'api::give-mony.give-mony'
+      'api::customer.customer'
+    >;
+  };
+}
+
+export interface ApiGiveMoneyGiveMoney extends Struct.SingleTypeSchema {
+  collectionName: 'give_monies';
+  info: {
+    singularName: 'give-money';
+    pluralName: 'give-monies';
+    displayName: 'Give Money';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    title: Schema.Attribute.String;
+    other: Schema.Attribute.DynamicZone<
+      [
+        'shared.slider',
+        'shared.seo',
+        'shared.rich-text',
+        'shared.quote',
+        'shared.media',
+      ]
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::give-money.give-money'
     >;
   };
 }
@@ -874,12 +910,8 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
-    slug: Schema.Attribute.UID<'title'> &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
+    slug: Schema.Attribute.Relation<'oneToOne', 'api::slug.slug'>;
+    category: Schema.Attribute.Relation<'oneToOne', 'api::category.category'>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -916,11 +948,12 @@ export interface ApiPostPost extends Struct.CollectionTypeSchema {
       ['published', 'pending', 'blocked']
     > &
       Schema.Attribute.DefaultTo<'pending'>;
+    Condition: Schema.Attribute.DynamicZone<['shared.credit-info']>;
+    type: Schema.Attribute.Enumeration<['give-money', 'take-money']>;
     users_permissions_user: Schema.Attribute.Relation<
       'oneToOne',
       'plugin::users-permissions.user'
     >;
-    Condition: Schema.Attribute.DynamicZone<['shared.credit-info']>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -930,6 +963,49 @@ export interface ApiPostPost extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::post.post'>;
+  };
+}
+
+export interface ApiSlugSlug extends Struct.CollectionTypeSchema {
+  collectionName: 'slugs';
+  info: {
+    singularName: 'slug';
+    pluralName: 'slugs';
+    displayName: 'Slug';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    slug: Schema.Attribute.UID &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    type: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    page: Schema.Attribute.Relation<'oneToOne', 'api::page.page'>;
+    article: Schema.Attribute.Relation<'oneToOne', 'api::article.article'>;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::slug.slug'>;
   };
 }
 
@@ -975,6 +1051,7 @@ export interface ApiTakeMoneyTakeMoney extends Struct.SingleTypeSchema {
     singularName: 'take-money';
     pluralName: 'take-monies';
     displayName: 'Take Money';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -986,12 +1063,6 @@ export interface ApiTakeMoneyTakeMoney extends Struct.SingleTypeSchema {
   };
   attributes: {
     title: Schema.Attribute.String &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    slug: Schema.Attribute.UID<'title'> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -1406,11 +1477,13 @@ declare module '@strapi/strapi' {
       'api::blocked.blocked': ApiBlockedBlocked;
       'api::blog.blog': ApiBlogBlog;
       'api::category.category': ApiCategoryCategory;
-      'api::give-mony.give-mony': ApiGiveMonyGiveMony;
+      'api::customer.customer': ApiCustomerCustomer;
+      'api::give-money.give-money': ApiGiveMoneyGiveMoney;
       'api::global.global': ApiGlobalGlobal;
       'api::location.location': ApiLocationLocation;
       'api::page.page': ApiPagePage;
       'api::post.post': ApiPostPost;
+      'api::slug.slug': ApiSlugSlug;
       'api::tag.tag': ApiTagTag;
       'api::take-money.take-money': ApiTakeMoneyTakeMoney;
       'admin::permission': AdminPermission;

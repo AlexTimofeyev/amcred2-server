@@ -69,11 +69,6 @@
       "type": "string",
       "maxLength": 15
     },
-    "articles": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::article.article"
-    },
     "ip": {
       "type": "string",
       "required": false,

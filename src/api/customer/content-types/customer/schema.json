@@ -1,0 +1,61 @@
+{
+  "kind": "collectionType",
+  "collectionName": "customers",
+  "info": {
+    "singularName": "customer",
+    "pluralName": "customers",
+    "displayName": "Customer",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email",
+      "required": true,
+      "unique": true
+    },
+    "isBlocked": {
+      "type": "boolean"
+    },
+    "avatar": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "confirmedAt": {
+      "type": "datetime"
+    },
+    "verificationToken": {
+      "type": "string"
+    },
+    "resetPasswordToken": {
+      "type": "string"
+    },
+    "ip": {
+      "type": "string",
+      "unique": false
+    },
+    "password": {
+      "type": "string",
+      "required": true
+    },
+    "phone": {
+      "type": "string"
+    }
+  }
+}

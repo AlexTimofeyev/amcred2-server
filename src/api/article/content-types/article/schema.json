@@ -33,10 +33,6 @@
         }
       }
     },
-    "slug": {
-      "type": "uid",
-      "targetField": "title"
-    },
     "cover": {
       "type": "media",
       "multiple": false,
@@ -76,6 +72,17 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::category.category"
+    },
+    "slug": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::slug.slug",
+      "mappedBy": "article"
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     }
   }
 }

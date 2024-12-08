@@ -40,16 +40,23 @@
       ],
       "default": "pending"
     },
-    "users_permissions_user": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "plugin::users-permissions.user"
-    },
     "Condition": {
       "type": "dynamiczone",
       "components": [
         "shared.credit-info"
       ]
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "give-money",
+        "take-money"
+      ]
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     }
   }
 }

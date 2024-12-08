@@ -1,0 +1,29 @@
+{
+  "kind": "singleType",
+  "collectionName": "give_monies",
+  "info": {
+    "singularName": "give-money",
+    "pluralName": "give-monies",
+    "displayName": "Give Money",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "other": {
+      "type": "dynamiczone",
+      "components": [
+        "shared.slider",
+        "shared.seo",
+        "shared.rich-text",
+        "shared.quote",
+        "shared.media"
+      ]
+    }
+  }
+}

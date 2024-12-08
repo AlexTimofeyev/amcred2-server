@@ -40,13 +40,15 @@
       ]
     },
     "slug": {
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "type": "uid",
-      "targetField": "title"
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::slug.slug",
+      "inversedBy": "page"
+    },
+    "category": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::category.category"
     }
   }
 }
