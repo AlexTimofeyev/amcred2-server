@@ -1,4 +1,13 @@
 module.exports = ({ env }) => ({
+  // 'users-permissions': {
+  //   config: {
+  //     email: {
+  //       confirmation: {
+  //         redirectUrl: 'https://your-custom-domain.com/success',
+  //       },
+  //     },
+  //   },
+  // },
     email: {
       config: {
         provider: 'nodemailer',
