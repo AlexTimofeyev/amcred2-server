@@ -40,12 +40,6 @@
       ],
       "default": "pending"
     },
-    "Condition": {
-      "type": "dynamiczone",
-      "components": [
-        "shared.credit-info"
-      ]
-    },
     "type": {
       "type": "enumeration",
       "enum": [
@@ -57,6 +51,18 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "plugin::users-permissions.user"
+    },
+    "contact": {
+      "type": "dynamiczone",
+      "components": [
+        "shared.contact-info"
+      ]
+    },
+    "conditions": {
+      "type": "dynamiczone",
+      "components": [
+        "shared.credit-info"
+      ]
     }
   }
 }
