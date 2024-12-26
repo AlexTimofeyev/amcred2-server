@@ -73,6 +73,14 @@
       "type": "string",
       "required": false,
       "maxLength": 39
+    },
+    "avatar": {
+      "allowedTypes": [
+        "images",
+        "files"
+      ],
+      "type": "media",
+      "multiple": false
     }
   }
 }

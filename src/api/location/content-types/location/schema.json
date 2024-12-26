@@ -10,12 +10,20 @@
   "options": {
     "draftAndPublish": false
   },
-  "pluginOptions": {},
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
   "attributes": {
     "name": {
       "type": "string",
       "required": true,
-      "pluginOptions": {},
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "maxLength": 255
     },
     "parent": {
@@ -29,10 +37,6 @@
       "relation": "oneToMany",
       "target": "api::location.location",
       "mappedBy": "parent"
-    },
-    "name_ru": {
-      "type": "string",
-      "maxLength": 255
     },
     "posts": {
       "type": "relation",
