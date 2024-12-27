@@ -15,9 +15,6 @@
     "title": {
       "type": "string"
     },
-    "title_ru": {
-      "type": "string"
-    },
     "locations": {
       "type": "relation",
       "relation": "manyToMany",
@@ -28,23 +25,11 @@
       "type": "uid",
       "targetField": "title"
     },
-    "body": {
-      "type": "text"
-    },
-    "post_status": {
-      "type": "enumeration",
-      "enum": [
-        "published",
-        "pending",
-        "blocked"
-      ],
-      "default": "pending"
-    },
     "type": {
       "type": "enumeration",
       "enum": [
-        "give-money",
-        "take-money"
+        "GIVE_MONEY",
+        "TAKE_MONEY"
       ]
     },
     "users_permissions_user": {
@@ -62,6 +47,21 @@
       "type": "dynamiczone",
       "components": [
         "shared.credit-info"
+      ]
+    },
+    "body": {
+      "type": "richtext"
+    },
+    "company": {
+      "type": "string"
+    },
+    "post_status": {
+      "type": "enumeration",
+      "enum": [
+        "PUBLISHED",
+        "DRAFT",
+        "PENDING",
+        "BLOCKED"
       ]
     }
   }
