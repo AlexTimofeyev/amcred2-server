@@ -75,12 +75,17 @@
       "maxLength": 39
     },
     "avatar": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
       "allowedTypes": [
         "images",
         "files"
-      ],
-      "type": "media",
-      "multiple": false
+      ]
+    },
+    "is_company": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

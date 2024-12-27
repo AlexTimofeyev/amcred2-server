@@ -3,7 +3,8 @@ import type { Schema, Struct } from '@strapi/strapi';
 export interface SharedContactInfo extends Struct.ComponentSchema {
   collectionName: 'components_shared_contact_infos';
   info: {
-    displayName: 'Contact Info';
+    description: '';
+    displayName: 'Contact';
     icon: 'user';
   };
   attributes: {
@@ -18,7 +19,8 @@ export interface SharedCreditInfo extends Struct.ComponentSchema {
   collectionName: 'components_shared_credit_infos';
   info: {
     description: '';
-    displayName: 'Credit info';
+    displayName: 'Credit';
+    icon: 'lock';
   };
   attributes: {
     currency: Schema.Attribute.Enumeration<['usd', 'uah', 'eur']>;

@@ -1,8 +1,9 @@
 {
   "collectionName": "components_shared_credit_infos",
   "info": {
-    "displayName": "Credit info",
-    "description": ""
+    "displayName": "Credit",
+    "description": "",
+    "icon": "lock"
   },
   "options": {},
   "attributes": {

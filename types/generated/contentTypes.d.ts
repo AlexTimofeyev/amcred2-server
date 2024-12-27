@@ -780,7 +780,8 @@ export interface ApiPostPost extends Struct.CollectionTypeSchema {
     draftAndPublish: false;
   };
   attributes: {
-    body: Schema.Attribute.Text;
+    body: Schema.Attribute.RichText;
+    company: Schema.Attribute.String;
     conditions: Schema.Attribute.DynamicZone<['shared.credit-info']>;
     contact: Schema.Attribute.DynamicZone<['shared.contact-info']>;
     createdAt: Schema.Attribute.DateTime;
@@ -794,14 +795,12 @@ export interface ApiPostPost extends Struct.CollectionTypeSchema {
       'api::location.location'
     >;
     post_status: Schema.Attribute.Enumeration<
-      ['published', 'pending', 'blocked']
-    > &
-      Schema.Attribute.DefaultTo<'pending'>;
+      ['PUBLISHED', 'DRAFT', 'PENDING', 'BLOCKED']
+    >;
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'title'>;
     title: Schema.Attribute.String;
-    title_ru: Schema.Attribute.String;
-    type: Schema.Attribute.Enumeration<['give-money', 'take-money']>;
+    type: Schema.Attribute.Enumeration<['GIVE_MONEY', 'TAKE_MONEY']>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1417,6 +1416,7 @@ export interface PluginUsersPermissionsUser
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 39;
       }>;
+    is_company: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
