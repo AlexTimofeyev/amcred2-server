@@ -86,6 +86,27 @@
     "is_company": {
       "type": "boolean",
       "default": false
+    },
+    "company": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::company.company",
+      "inversedBy": "users"
+    },
+    "phones": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::phone.phone",
+      "mappedBy": "users_permissions_user"
+    },
+    "posts": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::post.post",
+      "mappedBy": "users_permissions_user"
+    },
+    "companyName": {
+      "type": "string"
     }
   }
 }
