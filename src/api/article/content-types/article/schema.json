@@ -62,23 +62,6 @@
         }
       }
     },
-    "tags": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::tag.tag",
-      "inversedBy": "articles"
-    },
-    "category": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::category.category"
-    },
-    "slug": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::slug.slug",
-      "mappedBy": "article"
-    },
     "users_permissions_user": {
       "type": "relation",
       "relation": "oneToOne",

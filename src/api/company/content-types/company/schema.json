@@ -29,12 +29,6 @@
       "relation": "oneToMany",
       "target": "plugin::users-permissions.user",
       "mappedBy": "company"
-    },
-    "phones": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::phone.phone",
-      "mappedBy": "company"
     }
   }
 }

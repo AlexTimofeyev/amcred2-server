@@ -53,17 +53,8 @@
     "body": {
       "type": "richtext"
     },
-    "company": {
+    "companyName": {
       "type": "string"
-    },
-    "post_status": {
-      "type": "enumeration",
-      "enum": [
-        "PUBLISHED",
-        "DRAFT",
-        "PENDING",
-        "BLOCKED"
-      ]
     }
   }
 }

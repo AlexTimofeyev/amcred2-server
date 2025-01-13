@@ -93,12 +93,6 @@
       "target": "api::company.company",
       "inversedBy": "users"
     },
-    "phones": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::phone.phone",
-      "mappedBy": "users_permissions_user"
-    },
     "posts": {
       "type": "relation",
       "relation": "oneToMany",

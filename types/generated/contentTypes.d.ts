@@ -369,49 +369,6 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiAboutAbout extends Struct.SingleTypeSchema {
-  collectionName: 'abouts';
-  info: {
-    description: 'Write about yourself and the content you create';
-    displayName: 'About';
-    pluralName: 'abouts';
-    singularName: 'about';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  pluginOptions: {
-    i18n: {
-      localized: true;
-    };
-  };
-  attributes: {
-    blocks: Schema.Attribute.DynamicZone<
-      ['shared.media', 'shared.quote', 'shared.rich-text', 'shared.slider']
-    > &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::about.about'>;
-    publishedAt: Schema.Attribute.DateTime;
-    title: Schema.Attribute.String &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
 export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
   collectionName: 'articles';
   info: {
@@ -437,7 +394,6 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
-    category: Schema.Attribute.Relation<'oneToOne', 'api::category.category'>;
     cover: Schema.Attribute.Media<'images' | 'files' | 'videos'> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -462,8 +418,6 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
       'api::article.article'
     >;
     publishedAt: Schema.Attribute.DateTime;
-    slug: Schema.Attribute.Relation<'oneToOne', 'api::slug.slug'>;
-    tags: Schema.Attribute.Relation<'manyToMany', 'api::tag.tag'>;
     title: Schema.Attribute.String &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -514,66 +468,6 @@ export interface ApiBlockedBlocked extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiBlogBlog extends Struct.SingleTypeSchema {
-  collectionName: 'blogs';
-  info: {
-    displayName: 'Blog';
-    pluralName: 'blogs';
-    singularName: 'blog';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::blog.blog'> &
-      Schema.Attribute.Private;
-    publishedAt: Schema.Attribute.DateTime;
-    seo: Schema.Attribute.Component<'shared.seo', true>;
-    title: Schema.Attribute.String;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
-  collectionName: 'categories';
-  info: {
-    description: 'Organize your content into categories';
-    displayName: 'Category';
-    pluralName: 'categories';
-    singularName: 'category';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    description: Schema.Attribute.Text;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::category.category'
-    > &
-      Schema.Attribute.Private;
-    name: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 255;
-      }>;
-    publishedAt: Schema.Attribute.DateTime;
-    slug: Schema.Attribute.UID<'name'>;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
 export interface ApiCompanyCompany extends Struct.CollectionTypeSchema {
   collectionName: 'companies';
   info: {
@@ -599,7 +493,6 @@ export interface ApiCompanyCompany extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     name: Schema.Attribute.String;
     phone: Schema.Attribute.String;
-    phones: Schema.Attribute.Relation<'oneToMany', 'api::phone.phone'>;
     publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -622,16 +515,20 @@ export interface ApiGiveMoneyGiveMoney extends Struct.SingleTypeSchema {
   options: {
     draftAndPublish: true;
   };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
   attributes: {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::give-money.give-money'
-    > &
-      Schema.Attribute.Private;
+    >;
     other: Schema.Attribute.DynamicZone<
       [
         'shared.slider',
@@ -640,9 +537,19 @@ export interface ApiGiveMoneyGiveMoney extends Struct.SingleTypeSchema {
         'shared.quote',
         'shared.media',
       ]
-    >;
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     publishedAt: Schema.Attribute.DateTime;
-    title: Schema.Attribute.String;
+    title: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -778,14 +685,12 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
     };
   };
   attributes: {
-    category: Schema.Attribute.Relation<'oneToOne', 'api::category.category'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::page.page'>;
     publishedAt: Schema.Attribute.DateTime;
-    slug: Schema.Attribute.Relation<'oneToOne', 'api::slug.slug'>;
     title: Schema.Attribute.String &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -812,47 +717,6 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiPhonePhone extends Struct.CollectionTypeSchema {
-  collectionName: 'phones';
-  info: {
-    description: '';
-    displayName: 'phone';
-    pluralName: 'phones';
-    singularName: 'phone';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    blocked: Schema.Attribute.Boolean;
-    company: Schema.Attribute.Relation<'manyToOne', 'api::company.company'>;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::phone.phone'> &
-      Schema.Attribute.Private;
-    number: Schema.Attribute.BigInteger &
-      Schema.Attribute.Required &
-      Schema.Attribute.Unique &
-      Schema.Attribute.SetMinMax<
-        {
-          max: '15';
-          min: '8';
-        },
-        string
-      >;
-    publishedAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    users_permissions_user: Schema.Attribute.Relation<
-      'manyToOne',
-      'plugin::users-permissions.user'
-    >;
-  };
-}
-
 export interface ApiPostPost extends Struct.CollectionTypeSchema {
   collectionName: 'posts';
   info: {
@@ -866,7 +730,7 @@ export interface ApiPostPost extends Struct.CollectionTypeSchema {
   };
   attributes: {
     body: Schema.Attribute.RichText;
-    company: Schema.Attribute.String;
+    companyName: Schema.Attribute.String;
     conditions: Schema.Attribute.DynamicZone<['shared.credit-info']>;
     contact: Schema.Attribute.DynamicZone<['shared.contact-info']>;
     createdAt: Schema.Attribute.DateTime;
@@ -879,9 +743,6 @@ export interface ApiPostPost extends Struct.CollectionTypeSchema {
       'manyToMany',
       'api::location.location'
     >;
-    post_status: Schema.Attribute.Enumeration<
-      ['PUBLISHED', 'DRAFT', 'PENDING', 'BLOCKED']
-    >;
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'title'>;
     title: Schema.Attribute.String;
@@ -893,86 +754,6 @@ export interface ApiPostPost extends Struct.CollectionTypeSchema {
       'manyToOne',
       'plugin::users-permissions.user'
     >;
-  };
-}
-
-export interface ApiSlugSlug extends Struct.CollectionTypeSchema {
-  collectionName: 'slugs';
-  info: {
-    description: '';
-    displayName: 'Slug';
-    pluralName: 'slugs';
-    singularName: 'slug';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  pluginOptions: {
-    i18n: {
-      localized: true;
-    };
-  };
-  attributes: {
-    article: Schema.Attribute.Relation<'oneToOne', 'api::article.article'>;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::slug.slug'>;
-    page: Schema.Attribute.Relation<'oneToOne', 'api::page.page'>;
-    publishedAt: Schema.Attribute.DateTime;
-    slug: Schema.Attribute.UID &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    type: Schema.Attribute.String &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiTagTag extends Struct.CollectionTypeSchema {
-  collectionName: 'tags';
-  info: {
-    description: '';
-    displayName: 'Tag';
-    pluralName: 'tags';
-    singularName: 'tag';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    articles: Schema.Attribute.Relation<'manyToMany', 'api::article.article'>;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::tag.tag'> &
-      Schema.Attribute.Private;
-    name: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.Unique &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 255;
-      }>;
-    name_ru: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 255;
-      }>;
-    publishedAt: Schema.Attribute.DateTime;
-    slug: Schema.Attribute.UID<'name'>;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
   };
 }
 
@@ -1627,7 +1408,6 @@ export interface PluginUsersPermissionsUser
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 15;
       }>;
-    phones: Schema.Attribute.Relation<'oneToMany', 'api::phone.phone'>;
     posts: Schema.Attribute.Relation<'oneToMany', 'api::post.post'>;
     provider: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
@@ -1658,20 +1438,14 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
-      'api::about.about': ApiAboutAbout;
       'api::article.article': ApiArticleArticle;
       'api::blocked.blocked': ApiBlockedBlocked;
-      'api::blog.blog': ApiBlogBlog;
-      'api::category.category': ApiCategoryCategory;
       'api::company.company': ApiCompanyCompany;
       'api::give-money.give-money': ApiGiveMoneyGiveMoney;
       'api::global.global': ApiGlobalGlobal;
       'api::location.location': ApiLocationLocation;
       'api::page.page': ApiPagePage;
-      'api::phone.phone': ApiPhonePhone;
       'api::post.post': ApiPostPost;
-      'api::slug.slug': ApiSlugSlug;
-      'api::tag.tag': ApiTagTag;
       'api::take-money.take-money': ApiTakeMoneyTakeMoney;
       'plugin::comments.comment': PluginCommentsComment;
       'plugin::comments.comment-report': PluginCommentsCommentReport;
