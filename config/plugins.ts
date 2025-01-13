@@ -8,9 +8,25 @@ module.exports = ({ env }) => ({
   //     },
   //   },
   // },
-    seo: {
-      enabled: true,
-    },
+    // seo: {
+    //   enabled: true,
+    // },
+    // comments: {
+    //   enabled: true,
+    //   // config: {
+    //   //   badWords: false,
+    //   //   moderatorRoles: ["Authenticated"],
+    //   //   approvalFlow: ["api::post.post"],
+    //   //   entryLabel: {
+    //   //     "*": ["Title", "title"],
+    //   //     "api::post.post": ["MyField"],
+    //   //   },
+    //   //   blockedAuthorProps: ["name", "email"],
+    //   //   reportReasons: {
+    //   //     MY_CUSTOM_REASON: "MY_CUSTOM_REASON",
+    //   //   },
+    //   // },
+    // },
     email: {
       config: {
         provider: 'nodemailer',

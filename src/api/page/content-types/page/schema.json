@@ -38,17 +38,6 @@
         "shared.quote",
         "shared.media"
       ]
-    },
-    "slug": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::slug.slug",
-      "inversedBy": "page"
-    },
-    "category": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::category.category"
     }
   }
 }
