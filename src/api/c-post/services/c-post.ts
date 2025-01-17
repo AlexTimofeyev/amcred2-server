@@ -1,16 +1,11 @@
 "use strict";
-import  { randomBytes } from 'node:crypto';
-import { z } from 'zod'; 
 
-// Типи поста та статусу
+import { randomBytes } from "node:crypto";
+import { z } from "zod";
+
 const POST_TYPE = {
-  GIVE_MONEY: 'GIVE_MONEY',
-  TAKE_MONEY: 'TAKE_MONEY',
-} as const;
-
-const POST_STATUS = {
-  DRAFT: 'DRAFT',
-  PUBLISHED: 'PUBLISHED',
+  GIVE_MONEY: "GIVE_MONEY",
+  TAKE_MONEY: "TAKE_MONEY",
 } as const;
 
 const postSchema = z.object({
@@ -20,20 +15,23 @@ const postSchema = z.object({
   locations: z.array(z.string()),
   body: z.string().min(2, "Required"),
   type: z.enum([POST_TYPE.GIVE_MONEY, POST_TYPE.TAKE_MONEY]),
-  // status: z.enum([POST_STATUS.DRAFT, POST_STATUS.PUBLISHED]),
-  username: z.string().min(2, { message: "Username must be at least 2 characters long" }),
+  username: z
+    .string()
+    .min(2, { message: "Username must be at least 2 characters long" }),
   password: z.string().min(8).optional(),
   email: z.string().email({ message: "Invalid email address" }),
   phone: z.string().min(10, { message: "Phone number must be valid" }),
   company: z.string().optional(),
 });
 
-const generateSlug = async function(title: string): Promise<string> {
-  const slug = await strapi.service('plugin::content-manager.uid').generateUIDField({
-        contentTypeUID: 'api::post.post',
-        field: 'slug',
-        data: { title },
-      });
+const generateSlug = async function (title: string): Promise<string> {
+  const slug = await strapi
+    .service("plugin::content-manager.uid")
+    .generateUIDField({
+      contentTypeUID: "api::post.post",
+      field: "slug",
+      data: { title },
+    });
   return slug;
 };
 
@@ -44,46 +42,45 @@ export function randomString(length = 8) {
   return randomBytes(length / 2).toString("hex");
 }
 
-
 module.exports = {
   createPost: async (data: any) => {
     try {
       const parsedData = postSchema.parse(data);
       const slug = await generateSlug(parsedData.title);
       let user_id = data.user_id;
-      let password = '';
+      let password = "";
       let user;
 
-      const existingPost = await strapi.db.query('api::post.post').findOne({
+      const existingPost = await strapi.db.query("api::post.post").findOne({
         where: { slug },
       });
 
       if (existingPost) {
-        throw Error('Post already exists with title: ' + data.title);
+        throw Error("Post already exists with title: " + data.title);
       }
 
       if (user_id) {
-        user = await strapi.query('plugin::users-permissions.user').findOne({
+        user = await strapi.query("plugin::users-permissions.user").findOne({
           where: {
             id: user_id,
-          } 
+          },
         });
 
         if (!user) {
-          throw Error('Post userId invalid');
-        }  
+          throw Error("Post userId invalid");
+        }
       }
 
       if (!user_id) {
         password = parsedData.password || randomString(8);
-        const newUserObject = { 
+        const newUserObject = {
           email: parsedData.email,
           username: parsedData.username,
           companyName: parsedData.company,
           phone: parsedData.phone,
           password,
-          provider: 'local',
-          role: '3',
+          provider: "local",
+          role: "3",
           // confirmed: false,
         };
 
@@ -96,31 +93,35 @@ module.exports = {
           orList.push({ phone: parsedData.phone });
         }
 
-        const existingUser = await strapi.query('plugin::users-permissions.user').findOne({
-          where: {
-            $or: orList,
-          } 
-        });
+        const existingUser = await strapi
+          .query("plugin::users-permissions.user")
+          .findOne({
+            where: {
+              $or: orList,
+            },
+          });
 
         if (existingUser) {
-          throw Error('User already exists with this email or username or phone');
+          throw Error(
+            "User already exists with this email or username or phone"
+          );
         }
 
         const newUser = await strapi
-          .plugin('users-permissions')
-          .service('user')
+          .plugin("users-permissions")
+          .service("user")
           .add(newUserObject);
 
         strapi
-          .plugin('users-permissions')
-          .service('user')
+          .plugin("users-permissions")
+          .service("user")
           .sendConfirmationEmail(newUser);
 
         user_id = newUser.id;
         user = newUser;
       }
 
-      const newPost = await strapi.service('api::post.post').create({
+      const newPost = await strapi.service("api::post.post").create({
         data: {
           title: parsedData.title,
           locations: parsedData.locations,
@@ -128,13 +129,101 @@ module.exports = {
           body: parsedData.body,
           users_permissions_user: user_id,
           publishedAt: null,
-        }
+        },
       });
-      
+
       return { post: newPost, user, password };
     } catch (err) {
       console.error(err);
       throw Error(err);
+    }
+  },
+
+  getPostsWithStatus: async (ctx) => {
+    try {
+      const { page = 1, pageSize = 10 } = ctx.query;
+      const { userId } = ctx.params;
+
+      if (!userId) {
+        ctx.throw(400, "Unable to fetch posts, 'userId' is requerd");
+      }
+
+      const [resultCount, result] = await Promise.all([
+        strapi.db.connection.raw(`
+          SELECT COUNT(DISTINCT p."document_id") AS count
+          FROM "posts" p, "posts_users_permissions_user_lnk" pu, "up_users" u
+          WHERE pu.post_id = p.id AND pu.user_id = u.id AND u.id = ?
+          `, [userId]),
+        strapi.db.connection.raw(`
+          SELECT p.*
+          FROM "posts" p, "posts_users_permissions_user_lnk" pu, "up_users" u
+          WHERE pu.post_id = p.id AND pu.user_id = u.id AND u.id = ?
+          GROUP BY p."document_id"
+          ORDER BY p."created_at" DESC
+          LIMIT ? OFFSET ?
+        `, [userId, pageSize, (page - 1) * pageSize])
+      ]);
+
+      const documentIds = [];
+      const ids = [];
+
+      result.forEach(post => {
+        if (!post['document_id'] || !post['id']) {
+          return;
+        }
+        documentIds.push(post['document_id']);
+        ids.push(post['id']);
+      });
+
+      const documentPlaceholders = documentIds.map(() => '?').join(', ');
+      const idPlaceholders = ids.map(() => '?').join(', ');
+
+      const resultWithDates = await strapi.db.connection.raw(`
+        SELECT p.published_at, p.updated_at, p.created_at, p.document_id, p.id  
+        FROM "posts" p
+        WHERE p."document_id" IN (${documentPlaceholders}) AND p."id" NOT IN (${idPlaceholders})`,
+        [...documentIds, ...ids]);
+      
+      const normalizedResultWithDates = resultWithDates.reduce((acc, item) => {
+        acc[item['document_id']] = item;
+        return acc;
+      }, {});
+
+      console.log("result resultCount >>", resultWithDates, normalizedResultWithDates);
+
+      const resultWithStatus = result.map(post => {
+        let status = 'published';
+        const dId = post['document_id'];
+
+        const comparePublishedAt = normalizedResultWithDates[dId] && normalizedResultWithDates[dId]['published_at'];
+        const compareUpdatedAt = normalizedResultWithDates[dId] && normalizedResultWithDates[dId]['updated_at'];
+
+        const publishedAt = post['published_at'];
+        const updatedAt = post['updated_at'];
+
+        if(!publishedAt && !comparePublishedAt) {
+          status = 'draft';
+        } else if(publishedAt || comparePublishedAt && updatedAt !== compareUpdatedAt) {
+          status = 'modified';
+        }
+        return {...post, status };
+      });
+
+
+      const [data, total] = [resultWithStatus, resultCount?.[0].count];
+
+
+      const meta = {
+        page: parseInt(page, 10),
+        pageSize: parseInt(pageSize, 10),
+        pageCount: Math.ceil(total / pageSize),
+        total,
+      };
+
+      return { data, meta };
+    } catch (err) {
+      console.log(err);
+      ctx.throw(500, "Unable to fetch posts");
     }
   },
 };
