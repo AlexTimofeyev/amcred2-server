@@ -155,8 +155,9 @@ module.exports = {
           WHERE pu.post_id = p.id AND pu.user_id = u.id AND u.id = ?
           `, [userId]),
         strapi.db.connection.raw(`
-          SELECT p.*
+          SELECT p.*, COUNT(DISTINCT c.id) as comments
           FROM "posts" p, "posts_users_permissions_user_lnk" pu, "up_users" u
+          LEFT JOIN "plugin_comments_comments" as c ON c."related" = CONCAT('api::post.post:', p.document_id)
           WHERE pu.post_id = p.id AND pu.user_id = u.id AND u.id = ?
           GROUP BY p."document_id"
           ORDER BY p."created_at" DESC
@@ -214,10 +215,12 @@ module.exports = {
 
 
       const meta = {
-        page: parseInt(page, 10),
-        pageSize: parseInt(pageSize, 10),
-        pageCount: Math.ceil(total / pageSize),
-        total,
+        pagination: {
+          page: parseInt(page, 10),
+          pageSize: parseInt(pageSize, 10),
+          pageCount: Math.ceil(total / pageSize),
+          total,
+        }
       };
 
       return { data, meta };
