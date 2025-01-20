@@ -190,8 +190,6 @@ module.exports = {
         return acc;
       }, {});
 
-      console.log("result resultCount >>", resultWithDates, normalizedResultWithDates);
-
       const resultWithStatus = result.map(post => {
         let status = 'published';
         const dId = post['document_id'];
