@@ -175,8 +175,8 @@ module.exports = {
 
       const documentIds = [];
       const ids = [];
-
-      result.forEach(post => {
+      const posts = result.rows || result;
+      posts.forEach(post => {
         if (!post['document_id'] || !post['id']) {
           return;
         }
@@ -193,31 +193,34 @@ module.exports = {
         WHERE p."document_id" IN (${documentPlaceholders}) AND p."id" NOT IN (${idPlaceholders})`,
         [...documentIds, ...ids]);
       
-      const normalizedResultWithDates = resultWithDates.reduce((acc, item) => {
+      const postsWithDates = resultWithDates.rows || resultWithDates;
+      const normalizedResultWithDates = postsWithDates.reduce((acc, item) => {
         acc[item['document_id']] = item;
         return acc;
       }, {});
 
-      const resultWithStatus = result.map(post => {
+      const resultWithStatus = posts.map(post => {
         let status = 'published';
         const dId = post['document_id'];
 
-        const comparePublishedAt = normalizedResultWithDates[dId] && normalizedResultWithDates[dId]['published_at'];
-        const compareUpdatedAt = normalizedResultWithDates[dId] && normalizedResultWithDates[dId]['updated_at'];
+        const comparePublishedAt = normalizedResultWithDates[dId] && 
+          new Date(normalizedResultWithDates[dId]['published_at']).getTime();
+        const compareUpdatedAt = normalizedResultWithDates[dId] && 
+          new Date(normalizedResultWithDates[dId]['updated_at']).getTime();
 
-        const publishedAt = post['published_at'];
-        const updatedAt = post['updated_at'];
+        const publishedAt =  new Date(post['published_at']).getTime();
+        const updatedAt = new Date(post['updated_at']).getTime();
 
         if(!publishedAt && !comparePublishedAt) {
           status = 'draft';
-        } else if(publishedAt || comparePublishedAt && updatedAt !== compareUpdatedAt) {
+        } else if((publishedAt || comparePublishedAt) && updatedAt !== compareUpdatedAt) {
           status = 'modified';
         }
         return {...post, status };
       });
 
-
-      const [data, total] = [resultWithStatus, resultCount?.[0].count];
+      const counts = resultCount.rows || resultCount;
+      const [data, total] = [resultWithStatus, counts?.[0]?.count];
 
 
       const meta = {
