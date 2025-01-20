@@ -155,13 +155,21 @@ module.exports = {
           WHERE pu.post_id = p.id AND pu.user_id = u.id AND u.id = ?
           `, [userId]),
         strapi.db.connection.raw(`
-          SELECT p.*, COUNT(DISTINCT c.id) as comments
-          FROM "posts" p, "posts_users_permissions_user_lnk" pu, "up_users" u
-          LEFT JOIN "plugin_comments_comments" as c ON c."related" = CONCAT('api::post.post:', p.document_id)
-          WHERE pu.post_id = p.id AND pu.user_id = u.id AND u.id = ?
-          GROUP BY p."document_id"
+          WITH grouped_posts AS (
+              SELECT p."document_id", MIN(p.id) AS id
+              FROM "posts" p
+              JOIN "posts_users_permissions_user_lnk" pu ON pu.post_id = p.id
+              WHERE pu.user_id = ?
+              GROUP BY p."document_id"
+          )
+          SELECT 
+            DISTINCT p."document_id", 
+            p.*, 
+            (select COUNT(DISTINCT c.id) FROM "plugin_comments_comments" as c WHERE c."related" = CONCAT('api::post.post:', p.document_id)) as comments
+          FROM grouped_posts gp
+          JOIN "posts" p ON p.id = gp.id
           ORDER BY p."created_at" DESC
-          LIMIT ? OFFSET ?
+          LIMIT ? OFFSET ?;
         `, [userId, pageSize, (page - 1) * pageSize])
       ]);
 
