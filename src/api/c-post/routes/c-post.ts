@@ -17,6 +17,15 @@ export default {
         policies: [],
         middlewares: [],
       },
+    },
+    {
+     method: 'PUT',
+     path: '/c-post/unpublish/:documentId',
+     handler: 'c-post.unpublish',
+     config: {
+       policies: [],
+       middlewares: [],
      },
+   },
   ],
 };

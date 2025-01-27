@@ -20,5 +20,15 @@ module.exports = {
     } catch (err) {
       ctx.badRequest("get posts controller error", { moreDetails: err });
     }
+  },
+  unpublish: async (ctx, next) => {
+    try {
+      const data = await strapi
+        .service("api::c-post.c-post")
+        .unpublish(ctx);
+      ctx.body = data;
+    } catch (err) {
+      ctx.badRequest("get posts controller error", { moreDetails: err });
+    }
   }
 };
