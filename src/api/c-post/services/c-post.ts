@@ -24,17 +24,6 @@ const postSchema = z.object({
   company: z.string().optional(),
 });
 
-const generateSlug = async function (title: string): Promise<string> {
-  const slug = await strapi
-    .service("plugin::content-manager.uid")
-    .generateUIDField({
-      contentTypeUID: "api::post.post",
-      field: "slug",
-      data: { title },
-    });
-  return slug;
-};
-
 const randomString = (length = 8) => {
   if (length % 2 !== 0) {
     length++;
@@ -46,7 +35,11 @@ module.exports = {
   createPost: async (data: any) => {
     try {
       const parsedData = postSchema.parse(data);
-      const slug = await generateSlug(parsedData.title);
+
+      const slug = await strapi
+        .service("api::c-plugin.c-plugin")
+        .getUniqPostSlug({ title: parsedData.title });
+
       let user_id = data.user_id;
       let password = "";
       let user;
@@ -81,7 +74,6 @@ module.exports = {
           password,
           provider: "local",
           role: "3",
-          // confirmed: false,
         };
 
         const orList: Record<string, string>[] = [
