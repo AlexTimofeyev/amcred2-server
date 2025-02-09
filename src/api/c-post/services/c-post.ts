@@ -24,29 +24,22 @@ const postSchema = z.object({
   company: z.string().optional(),
 });
 
-const generateSlug = async function (title: string): Promise<string> {
-  const slug = await strapi
-    .service("plugin::content-manager.uid")
-    .generateUIDField({
-      contentTypeUID: "api::post.post",
-      field: "slug",
-      data: { title },
-    });
-  return slug;
-};
-
-export function randomString(length = 8) {
+const randomString = (length = 8) => {
   if (length % 2 !== 0) {
     length++;
   }
   return randomBytes(length / 2).toString("hex");
-}
+};
 
 module.exports = {
   createPost: async (data: any) => {
     try {
       const parsedData = postSchema.parse(data);
-      const slug = await generateSlug(parsedData.title);
+
+      const slug = await strapi
+        .service("api::c-plugin.c-plugin")
+        .getUniqPostSlug({ title: parsedData.title });
+
       let user_id = data.user_id;
       let password = "";
       let user;
@@ -81,7 +74,6 @@ module.exports = {
           password,
           provider: "local",
           role: "3",
-          // confirmed: false,
         };
 
         const orList: Record<string, string>[] = [
@@ -129,6 +121,7 @@ module.exports = {
           body: parsedData.body,
           users_permissions_user: user_id,
           publishedAt: null,
+          type: parsedData.type,
         },
       });
 
@@ -149,12 +142,16 @@ module.exports = {
       }
 
       const [resultCount, result] = await Promise.all([
-        strapi.db.connection.raw(`
+        strapi.db.connection.raw(
+          `
           SELECT COUNT(DISTINCT p."document_id") AS count
           FROM "posts" p, "posts_users_permissions_user_lnk" pu, "up_users" u
           WHERE pu.post_id = p.id AND pu.user_id = u.id AND u.id = ?
-          `, [userId]),
-        strapi.db.connection.raw(`
+          `,
+          [userId]
+        ),
+        strapi.db.connection.raw(
+          `
           WITH grouped_posts AS (
               SELECT p."document_id", MIN(p.id) AS id
               FROM "posts" p
@@ -170,58 +167,73 @@ module.exports = {
           JOIN "posts" p ON p.id = gp.id
           ORDER BY p."created_at" DESC
           LIMIT ? OFFSET ?;
-        `, [userId, pageSize, (page - 1) * pageSize])
+        `,
+          [userId, pageSize, (page - 1) * pageSize]
+        ),
       ]);
 
       const documentIds = [];
       const ids = [];
       const posts = result.rows || result;
-      posts.forEach(post => {
-        if (!post['document_id'] || !post['id']) {
+      posts.forEach((post) => {
+        if (!post["document_id"] || !post["id"]) {
           return;
         }
-        documentIds.push(post['document_id']);
-        ids.push(post['id']);
+        documentIds.push(post["document_id"]);
+        ids.push(post["id"]);
       });
 
-      const documentPlaceholders = documentIds.map(() => '?').join(', ');
-      const idPlaceholders = ids.map(() => '?').join(', ');
+      const documentPlaceholders = documentIds.map(() => "?").join(", ");
+      const idPlaceholders = ids.map(() => "?").join(", ");
 
-      const resultWithDates = await strapi.db.connection.raw(`
+      const resultWithDates = await strapi.db.connection.raw(
+        `
         SELECT p.published_at, p.updated_at, p.created_at, p.document_id, p.id  
         FROM "posts" p
         WHERE p."document_id" IN (${documentPlaceholders}) AND p."id" NOT IN (${idPlaceholders})`,
-        [...documentIds, ...ids]);
-      
+        [...documentIds, ...ids]
+      );
+
       const postsWithDates = resultWithDates.rows || resultWithDates;
       const normalizedResultWithDates = postsWithDates.reduce((acc, item) => {
-        acc[item['document_id']] = item;
+        acc[item["document_id"]] = item;
         return acc;
       }, {});
 
-      const resultWithStatus = posts.map(post => {
-        let status = 'published';
-        const dId = post['document_id'];
+      const resultWithStatus = posts.map((post) => {
+        let status = "published";
+        const dId = post["document_id"];
 
-        const comparePublishedAt = normalizedResultWithDates[dId] && 
-          new Date(normalizedResultWithDates[dId]['published_at']).getTime();
-        const compareUpdatedAt = normalizedResultWithDates[dId] && 
-          new Date(normalizedResultWithDates[dId]['updated_at']).getTime();
+        const comparePublishedAt =
+          normalizedResultWithDates[dId] &&
+          new Date(normalizedResultWithDates[dId]["published_at"]).getTime();
+        const compareUpdatedAt =
+          normalizedResultWithDates[dId] &&
+          new Date(normalizedResultWithDates[dId]["updated_at"]).getTime();
 
-        const publishedAt =  new Date(post['published_at']).getTime();
-        const updatedAt = new Date(post['updated_at']).getTime();
+        const publishedAt = new Date(post["published_at"]).getTime();
+        const updatedAt = new Date(post["updated_at"]).getTime();
 
-        if(!publishedAt && !comparePublishedAt) {
-          status = 'draft';
-        } else if((publishedAt || comparePublishedAt) && updatedAt !== compareUpdatedAt) {
-          status = 'modified';
+        if (!publishedAt && !comparePublishedAt) {
+          status = "draft";
+        } else if (
+          (publishedAt || comparePublishedAt) &&
+          updatedAt !== compareUpdatedAt
+        ) {
+          status = "modified";
         }
-        return {...post, status };
+        return {
+          ...post,
+          status,
+          documentId: dId,
+          createdAt: post["created_at"],
+          publishedAt: post["published_at"],
+          updatedAt: post["updated_at"],
+        };
       });
 
       const counts = resultCount.rows || resultCount;
       const [data, total] = [resultWithStatus, counts?.[0]?.count];
-
 
       const meta = {
         pagination: {
@@ -229,7 +241,7 @@ module.exports = {
           pageSize: parseInt(pageSize, 10),
           pageCount: Math.ceil(total / pageSize),
           total,
-        }
+        },
       };
 
       return { data, meta };
@@ -237,5 +249,16 @@ module.exports = {
       console.log(err);
       ctx.throw(500, "Unable to fetch posts");
     }
+  },
+
+  unpublish: async (ctx) => {
+    const { documentId } = ctx.params;
+
+    await strapi.documents("api::post.post").unpublish({ documentId });
+    const data = await strapi.documents("api::post.post").findOne({
+      documentId,
+      status: "draft",
+    });
+    return { data }
   },
 };
