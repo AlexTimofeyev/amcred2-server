@@ -1,0 +1,31 @@
+{
+  "collectionName": "components_organization_mfo_details",
+  "info": {
+    "displayName": "MFO Details",
+    "icon": "folder",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "real_year_rate": {
+      "type": "component",
+      "repeatable": false,
+      "component": "organization-shared.real-year-percent-rate"
+    },
+    "terms": {
+      "type": "component",
+      "repeatable": false,
+      "component": "organization-shared.credit-terms"
+    },
+    "services": {
+      "type": "component",
+      "repeatable": false,
+      "component": "organization-shared.mfo-services"
+    },
+    "rate": {
+      "type": "component",
+      "repeatable": false,
+      "component": "organization-shared.rate"
+    }
+  }
+}

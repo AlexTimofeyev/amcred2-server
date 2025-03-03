@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_organization_shared_mfo_services",
+  "info": {
+    "displayName": "MFO Services",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "services": {
+      "type": "customField",
+      "default": "[]",
+      "options": [
+        "card",
+        "cache",
+        "bank_id",
+        "refinancing",
+        "online",
+        "for_3min",
+        "for_5min",
+        "for_96h"
+      ],
+      "customField": "plugin::multi-select.multi-select"
+    }
+  }
+}

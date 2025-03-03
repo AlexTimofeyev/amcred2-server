@@ -15,20 +15,19 @@
     "name": {
       "type": "string"
     },
-    "phone": {
-      "type": "string"
-    },
-    "email": {
-      "type": "email"
-    },
-    "description": {
-      "type": "blocks"
-    },
     "users": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "plugin::users-permissions.user",
       "mappedBy": "company"
+    },
+    "logo": {
+      "allowedTypes": [
+        "files",
+        "images"
+      ],
+      "type": "media",
+      "multiple": false
     }
   }
 }

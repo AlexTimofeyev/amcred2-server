@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_organization_shared_rates",
+  "info": {
+    "displayName": "rate"
+  },
+  "options": {},
+  "attributes": {
+    "rate_per_day": {
+      "type": "decimal"
+    },
+    "rate_per_year": {
+      "type": "decimal"
+    },
+    "max_term": {
+      "type": "integer"
+    },
+    "max_value_per_year": {
+      "type": "integer"
+    }
+  }
+}

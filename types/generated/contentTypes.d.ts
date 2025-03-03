@@ -483,16 +483,14 @@ export interface ApiCompanyCompany extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    description: Schema.Attribute.Blocks;
-    email: Schema.Attribute.Email;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::company.company'
     > &
       Schema.Attribute.Private;
+    logo: Schema.Attribute.Media<'files' | 'images'>;
     name: Schema.Attribute.String;
-    phone: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -668,6 +666,54 @@ export interface ApiLocationLocation extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiOrganizationOrganization
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'organizations';
+  info: {
+    description: '';
+    displayName: 'Organization';
+    pluralName: 'organizations';
+    singularName: 'organization';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    about: Schema.Attribute.RichText;
+    address: Schema.Attribute.String;
+    closed_at: Schema.Attribute.Date;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.String;
+    details: Schema.Attribute.DynamicZone<['organization.mfo-details']>;
+    edrpou: Schema.Attribute.Integer;
+    email: Schema.Attribute.Email;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::organization.organization'
+    > &
+      Schema.Attribute.Private;
+    logo: Schema.Attribute.Media<'images'>;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    org_status: Schema.Attribute.Enumeration<
+      ['ACTIVE', 'PROBLEMATIC', 'LIQUIDATED']
+    >;
+    phone: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    type: Schema.Attribute.Enumeration<
+      ['bank', 'mfo', 'exchange', 'insurance', 'government', 'other']
+    > &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'other'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    works_from: Schema.Attribute.Date;
+  };
+}
+
 export interface ApiPagePage extends Struct.CollectionTypeSchema {
   collectionName: 'pages';
   info: {
@@ -731,7 +777,7 @@ export interface ApiPostPost extends Struct.CollectionTypeSchema {
   attributes: {
     body: Schema.Attribute.RichText;
     companyName: Schema.Attribute.String;
-    conditions: Schema.Attribute.DynamicZone<['shared.credit-info']>;
+    conditions: Schema.Attribute.DynamicZone<['post.credits']>;
     contact: Schema.Attribute.DynamicZone<['shared.contact-info']>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -746,7 +792,7 @@ export interface ApiPostPost extends Struct.CollectionTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'title'>;
     title: Schema.Attribute.String;
-    type: Schema.Attribute.Enumeration<['GIVE_MONEY', 'TAKE_MONEY']>;
+    type: Schema.Attribute.Enumeration<['BORROW_MONEY', 'LAND_MONEY']>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1444,6 +1490,7 @@ declare module '@strapi/strapi' {
       'api::give-money.give-money': ApiGiveMoneyGiveMoney;
       'api::global.global': ApiGlobalGlobal;
       'api::location.location': ApiLocationLocation;
+      'api::organization.organization': ApiOrganizationOrganization;
       'api::page.page': ApiPagePage;
       'api::post.post': ApiPostPost;
       'api::take-money.take-money': ApiTakeMoneyTakeMoney;

@@ -1,0 +1,80 @@
+{
+  "kind": "collectionType",
+  "collectionName": "organizations",
+  "info": {
+    "singularName": "organization",
+    "pluralName": "organizations",
+    "displayName": "Organization",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": false
+    },
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "bank",
+        "mfo",
+        "exchange",
+        "insurance",
+        "government",
+        "other"
+      ],
+      "required": true,
+      "default": "other"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "address": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "edrpou": {
+      "type": "integer"
+    },
+    "org_status": {
+      "type": "enumeration",
+      "enum": [
+        "ACTIVE",
+        "PROBLEMATIC",
+        "LIQUIDATED"
+      ]
+    },
+    "closed_at": {
+      "type": "date"
+    },
+    "works_from": {
+      "type": "date"
+    },
+    "about": {
+      "type": "richtext"
+    },
+    "details": {
+      "type": "dynamiczone",
+      "components": [
+        "organization.mfo-details"
+      ]
+    }
+  }
+}
