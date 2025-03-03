@@ -1,0 +1,31 @@
+{
+  "collectionName": "components_post_credits",
+  "info": {
+    "displayName": "Credits"
+  },
+  "options": {},
+  "attributes": {
+    "min_value": {
+      "type": "integer"
+    },
+    "max_value": {
+      "type": "integer"
+    },
+    "min_month": {
+      "type": "integer"
+    },
+    "max_month": {
+      "type": "integer"
+    },
+    "currency": {
+      "type": "customField",
+      "default": "[]",
+      "options": [
+        "USD",
+        "UAH",
+        "EUR"
+      ],
+      "customField": "plugin::multi-select.multi-select"
+    }
+  }
+}

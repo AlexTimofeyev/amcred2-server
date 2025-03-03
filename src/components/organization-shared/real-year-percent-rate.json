@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_organization_shared_real_year_percent_rates",
+  "info": {
+    "displayName": "Real Year Percent Rate",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "percent_from": {
+      "type": "decimal"
+    },
+    "percent_to": {
+      "type": "decimal"
+    }
+  }
+}

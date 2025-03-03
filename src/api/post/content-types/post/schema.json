@@ -28,8 +28,8 @@
     "type": {
       "type": "enumeration",
       "enum": [
-        "GIVE_MONEY",
-        "TAKE_MONEY"
+        "BORROW_MONEY",
+        "LAND_MONEY"
       ]
     },
     "users_permissions_user": {
@@ -47,7 +47,7 @@
     "conditions": {
       "type": "dynamiczone",
       "components": [
-        "shared.credit-info"
+        "post.credits"
       ]
     },
     "body": {
