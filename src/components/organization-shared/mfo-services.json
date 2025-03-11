@@ -14,12 +14,20 @@
         "cache",
         "bank_id",
         "refinancing",
-        "online",
-        "for_3min",
-        "for_5min",
-        "for_96h"
+        "service_24_7"
       ],
       "customField": "plugin::multi-select.multi-select"
+    },
+    "time_to_approve": {
+      "type": "integer"
+    },
+    "time_to_approve_type": {
+      "type": "enumeration",
+      "enum": [
+        "HOUR",
+        "MINUTE",
+        "DAY"
+      ]
     }
   }
 }
