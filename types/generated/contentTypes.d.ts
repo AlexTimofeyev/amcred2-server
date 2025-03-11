@@ -468,40 +468,6 @@ export interface ApiBlockedBlocked extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiCompanyCompany extends Struct.CollectionTypeSchema {
-  collectionName: 'companies';
-  info: {
-    description: '';
-    displayName: 'Company';
-    pluralName: 'companies';
-    singularName: 'company';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::company.company'
-    > &
-      Schema.Attribute.Private;
-    logo: Schema.Attribute.Media<'files' | 'images'>;
-    name: Schema.Attribute.String;
-    publishedAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    users: Schema.Attribute.Relation<
-      'oneToMany',
-      'plugin::users-permissions.user'
-    >;
-  };
-}
-
 export interface ApiGiveMoneyGiveMoney extends Struct.SingleTypeSchema {
   collectionName: 'give_monies';
   info: {
@@ -685,7 +651,7 @@ export interface ApiOrganizationOrganization
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    description: Schema.Attribute.String;
+    description: Schema.Attribute.Text;
     details: Schema.Attribute.DynamicZone<['organization.mfo-details']>;
     edrpou: Schema.Attribute.Integer;
     email: Schema.Attribute.Email;
@@ -702,6 +668,7 @@ export interface ApiOrganizationOrganization
     >;
     phone: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID<'name'>;
     type: Schema.Attribute.Enumeration<
       ['bank', 'mfo', 'exchange', 'insurance', 'government', 'other']
     > &
@@ -1422,7 +1389,6 @@ export interface PluginUsersPermissionsUser
   attributes: {
     avatar: Schema.Attribute.Media<'images' | 'files'>;
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    company: Schema.Attribute.Relation<'manyToOne', 'api::company.company'>;
     companyName: Schema.Attribute.String;
     confirmationToken: Schema.Attribute.String & Schema.Attribute.Private;
     confirmed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
@@ -1486,7 +1452,6 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::article.article': ApiArticleArticle;
       'api::blocked.blocked': ApiBlockedBlocked;
-      'api::company.company': ApiCompanyCompany;
       'api::give-money.give-money': ApiGiveMoneyGiveMoney;
       'api::global.global': ApiGlobalGlobal;
       'api::location.location': ApiLocationLocation;

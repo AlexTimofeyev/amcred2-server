@@ -87,12 +87,6 @@
       "type": "boolean",
       "default": false
     },
-    "company": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::company.company",
-      "inversedBy": "users"
-    },
     "posts": {
       "type": "relation",
       "relation": "oneToMany",

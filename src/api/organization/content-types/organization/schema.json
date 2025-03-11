@@ -41,9 +41,6 @@
     "phone": {
       "type": "string"
     },
-    "description": {
-      "type": "string"
-    },
     "address": {
       "type": "string"
     },
@@ -75,6 +72,13 @@
       "components": [
         "organization.mfo-details"
       ]
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name"
+    },
+    "description": {
+      "type": "text"
     }
   }
 }

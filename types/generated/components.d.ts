@@ -23,18 +23,13 @@ export interface OrganizationSharedMfoServices extends Struct.ComponentSchema {
     services: Schema.Attribute.JSON &
       Schema.Attribute.CustomField<
         'plugin::multi-select.multi-select',
-        [
-          'card',
-          'cache',
-          'bank_id',
-          'refinancing',
-          'online',
-          'for_3min',
-          'for_5min',
-          'for_96h',
-        ]
+        ['card', 'cache', 'bank_id', 'refinancing', 'service_24_7']
       > &
       Schema.Attribute.DefaultTo<'[]'>;
+    time_to_approve: Schema.Attribute.Integer;
+    time_to_approve_type: Schema.Attribute.Enumeration<
+      ['HOUR', 'MINUTE', 'DAY']
+    >;
   };
 }
 
