@@ -1,18 +1,5 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
-export interface OrganizationSharedCreditTerms extends Struct.ComponentSchema {
-  collectionName: 'components_organization_shared_credit_terms';
-  info: {
-    displayName: 'Credit Terms';
-  };
-  attributes: {
-    term_from: Schema.Attribute.Integer;
-    term_to: Schema.Attribute.Integer;
-    term_type: Schema.Attribute.Enumeration<['DAY', 'WEEK', 'MONTH']>;
-    term_value: Schema.Attribute.Decimal;
-  };
-}
-
 export interface OrganizationSharedMfoServices extends Struct.ComponentSchema {
   collectionName: 'components_organization_shared_mfo_services';
   info: {
@@ -36,13 +23,24 @@ export interface OrganizationSharedMfoServices extends Struct.ComponentSchema {
 export interface OrganizationSharedRate extends Struct.ComponentSchema {
   collectionName: 'components_organization_shared_rates';
   info: {
-    displayName: 'rate';
+    description: '';
+    displayName: 'Rate and Terms';
   };
   attributes: {
-    max_term: Schema.Attribute.Integer;
-    max_value_per_year: Schema.Attribute.Integer;
-    rate_per_day: Schema.Attribute.Decimal;
-    rate_per_year: Schema.Attribute.Decimal;
+    rate_first_percent: Schema.Attribute.Decimal;
+    rate_first_value: Schema.Attribute.BigInteger;
+    rate_from_period: Schema.Attribute.Integer;
+    rate_range_type: Schema.Attribute.Enumeration<
+      ['DAY', 'WEEK', 'MONTH', 'YEAR']
+    >;
+    rate_second_percent: Schema.Attribute.Decimal;
+    rate_second_value: Schema.Attribute.BigInteger;
+    rate_to_period: Schema.Attribute.Integer;
+    rate_type: Schema.Attribute.Enumeration<['DAY', 'WEEK', 'MONTH', 'YEAR']>;
+    terms_max: Schema.Attribute.Integer;
+    terms_max_type: Schema.Attribute.Enumeration<
+      ['DAY', 'WEEK', 'MONTH', 'YEAR']
+    >;
   };
 }
 
@@ -74,10 +72,6 @@ export interface OrganizationMfoDetails extends Struct.ComponentSchema {
     >;
     services: Schema.Attribute.Component<
       'organization-shared.mfo-services',
-      false
-    >;
-    terms: Schema.Attribute.Component<
-      'organization-shared.credit-terms',
       false
     >;
   };
@@ -182,7 +176,6 @@ export interface SharedSlider extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
-      'organization-shared.credit-terms': OrganizationSharedCreditTerms;
       'organization-shared.mfo-services': OrganizationSharedMfoServices;
       'organization-shared.rate': OrganizationSharedRate;
       'organization-shared.real-year-percent-rate': OrganizationSharedRealYearPercentRate;

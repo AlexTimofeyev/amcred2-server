@@ -55,6 +55,10 @@
     },
     "companyName": {
       "type": "string"
+    },
+    "seoIndex": {
+      "type": "boolean",
+      "default": false
     }
   }
 }
