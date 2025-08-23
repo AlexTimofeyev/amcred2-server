@@ -13,3 +13,4 @@ services:
       - POSTGRES_DATABASE=postgres
     volumes:
       - .tmp/postgresql:/var/lib/postgresql/data
+    command: ["postgres","-c","listen_addresses=*"]

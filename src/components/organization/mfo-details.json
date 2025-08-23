@@ -12,11 +12,6 @@
       "repeatable": false,
       "component": "organization-shared.real-year-percent-rate"
     },
-    "terms": {
-      "type": "component",
-      "repeatable": false,
-      "component": "organization-shared.credit-terms"
-    },
     "services": {
       "type": "component",
       "repeatable": false,

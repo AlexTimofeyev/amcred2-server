@@ -12,10 +12,11 @@
     "strapi": "strapi"
   },
   "dependencies": {
-    "@strapi/plugin-cloud": "5.7.0",
-    "@strapi/plugin-users-permissions": "5.7.0",
+    "@_sh/strapi-plugin-ckeditor": "^5.0.2",
+    "@strapi/plugin-cloud": "5.22.0",
+    "@strapi/plugin-users-permissions": "5.22.0",
     "@strapi/provider-email-nodemailer": "^5.7.0",
-    "@strapi/strapi": "5.7.0",
+    "@strapi/strapi": "5.22.0",
     "better-sqlite3": "11.3.0",
     "fs-extra": "^10.0.0",
     "mime-types": "^2.1.27",

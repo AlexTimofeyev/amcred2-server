@@ -1,21 +1,58 @@
 {
   "collectionName": "components_organization_shared_rates",
   "info": {
-    "displayName": "rate"
+    "displayName": "Rate and Terms",
+    "description": ""
   },
   "options": {},
   "attributes": {
-    "rate_per_day": {
+    "rate_first_percent": {
       "type": "decimal"
     },
-    "rate_per_year": {
+    "rate_second_percent": {
       "type": "decimal"
     },
-    "max_term": {
+    "rate_type": {
+      "type": "enumeration",
+      "enum": [
+        "DAY",
+        "WEEK",
+        "MONTH",
+        "YEAR"
+      ]
+    },
+    "rate_first_value": {
+      "type": "biginteger"
+    },
+    "rate_second_value": {
+      "type": "biginteger"
+    },
+    "rate_from_period": {
       "type": "integer"
     },
-    "max_value_per_year": {
+    "rate_to_period": {
       "type": "integer"
+    },
+    "rate_range_type": {
+      "type": "enumeration",
+      "enum": [
+        "DAY",
+        "WEEK",
+        "MONTH",
+        "YEAR"
+      ]
+    },
+    "terms_max": {
+      "type": "integer"
+    },
+    "terms_max_type": {
+      "type": "enumeration",
+      "enum": [
+        "DAY",
+        "WEEK",
+        "MONTH",
+        "YEAR"
+      ]
     }
   }
 }
