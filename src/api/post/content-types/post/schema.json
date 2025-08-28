@@ -59,6 +59,10 @@
     "seoIndex": {
       "type": "boolean",
       "default": false
+    },
+    "show_user_phone": {
+      "type": "boolean",
+      "default": false
     }
   }
 }
