@@ -1,8 +1,9 @@
-// Path: ./config/env/production/server.js`
 export default ({ env }) => ({
-    proxy: true,
-    url: env('MY_HEROKU_URL', 'https://amcred-server-de997fc648f5.herokuapp.com'), // Sets the public URL of the application.
-    app: { 
-         keys: env.array('APP_KEYS')
-       },
-   });
+  host: env('HOST', '0.0.0.0'),
+  port: env.int('PORT', 1337),
+  url: env('PUBLIC_URL', 'https://amcred-server-de997fc648f5.herokuapp.com'), // прод: https://api.amcred.co.ua
+  app: {
+    keys: env.array('APP_KEYS'),
+  },
+  proxy: true,
+});
