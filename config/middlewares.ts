@@ -2,7 +2,7 @@ export default ({ env }) => [
   'strapi::logger',
   'strapi::errors',
   'strapi::security',
-  'strapi::cors',
+  // 'strapi::cors',
   {
     name: 'strapi::cors',
     config: {
@@ -19,10 +19,17 @@ export default ({ env }) => [
     name: 'strapi::session',
     config: {
       enabled: true,
-      // Other session configurations if needed
-      // Ensure secure is set based on environment if not handled by proxy trust
-      secure: true,
-      proxy: true, // Explicitly enable proxy mode for the session middleware
+      // Configure cookie options via koa-session
+      proxy: true,
+      cookie: {
+        // In production (behind HTTPS), secure must be true. In local HTTP, set false to avoid errors.
+        secure: env.bool('SESSION_SECURE', env('NODE_ENV') === 'production'),
+        httpOnly: true,
+        // SameSite None requires secure=true; default to lax locally
+        sameSite: env('SESSION_SAMESITE', env('NODE_ENV') === 'production' ? 'none' : 'lax'),
+        // Optionally set a domain if you use a custom domain
+        domain: env('SESSION_DOMAIN'),
+      },
     },
   },
   'strapi::favicon',
