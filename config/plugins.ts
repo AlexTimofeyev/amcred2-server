@@ -31,17 +31,24 @@ module.exports = ({ env }) => ({
       config: {
         provider: 'nodemailer',
         providerOptions: {
-          host: 'smtp.gmail.com',
-          port: 465,           
-          secure: true,         
+          // If you use Gmail, set SMTP_SERVICE=gmail and omit host/port/secure
+          service: env('SMTP_SERVICE'),
+          host: env('SMTP_HOST', 'smtp.gmail.com'),
+          port: env.int('SMTP_PORT', 465),
+          secure: env.bool('SMTP_SECURE', true),
           auth: {
             user: env('SMTP_USER'),
             pass: env('SMTP_PASS'),
           },
+          // Helpful in Heroku to see detailed transport logs
+          logger: env.bool('SMTP_LOGGER', true),
+          debug: env.bool('SMTP_DEBUG', true),
+          // Optionally tweak TLS if needed (generally not required for Gmail)
+          // tls: { rejectUnauthorized: env.bool('SMTP_TLS_REJECT_UNAUTHORIZED', true) },
         },
         settings: {
-          defaultFrom: env('SMTP_USER'),
-          defaultReplyTo: env('SMTP_USER'),
+          defaultFrom: env('EMAIL_FROM', env('SMTP_USER')),
+          defaultReplyTo: env('EMAIL_REPLY_TO', env('SMTP_USER')),
         },
       },
     },
