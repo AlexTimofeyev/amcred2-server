@@ -32,7 +32,7 @@ module.exports = ({ env }) => ({
         provider: 'nodemailer',
         providerOptions: {
           // If you use Gmail, set SMTP_SERVICE=gmail and omit host/port/secure
-          service: env('SMTP_SERVICE'),
+          // service: env('SMTP_SERVICE'),
           host: env('SMTP_HOST', 'smtp.gmail.com'),
           port: env.int('SMTP_PORT', 465),
           secure: env.bool('SMTP_SECURE', true),
